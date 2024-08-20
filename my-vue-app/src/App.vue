@@ -24,11 +24,10 @@
 
 <script>
 import { defineComponent, ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router/dist/vue-router.esm-bundler.js';
 import Header from "./components/Header.vue";
 import Cart from "./components/Cart.vue";
-import jwtDecode from "jwt-decode";
-
+import {jwtDecode} from "jwt-decode";
 export default defineComponent({
   name: "App",
   components: {
@@ -48,17 +47,19 @@ export default defineComponent({
         products.value = await res.json();
 
         const token = localStorage.getItem("token");
-        if (token) {
-          userId.value = jwtDecode(token).userId;
-          cartItems.value = JSON.parse(localStorage.getItem(`cart-${userId.value}`)) || [];
-        }
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      }
-    });
+    if (token) {
+      userId.value = jwtDecode.default(token).userId; // Use jwtDecode.default
+      cartItems.value = JSON.parse(localStorage.getItem(`cart-${userId.value}`)) || [];
+    }
+  } catch (error) {
+    console.error("Failed to fetch products:", error);
+  }
+});
 
     const addToCart = (product) => {
-      const existingItem = cartItems.value.find((item) => item.id === product.id);
+      const existingItem = cartItems.value.find(
+        (item) => item.id === product.id
+      );
       if (existingItem) {
         updateCartItem(product.id, existingItem.quantity + 1);
       } else {
@@ -89,14 +90,19 @@ export default defineComponent({
     };
 
     const saveCart = () => {
-      localStorage.setItem(`cart-${userId.value}`, JSON.stringify(cartItems.value));
+      localStorage.setItem(
+        `cart-${userId.value}`,
+        JSON.stringify(cartItems.value)
+      );
     };
 
     const totalCost = computed(() => {
-      return cartItems.value.reduce((total, item) => {
-        const product = products.value.find((p) => p.id === item.id);
-        return total + (product?.price || 0) * item.quantity;
-      }, 0).toFixed(2);
+      return cartItems.value
+        .reduce((total, item) => {
+          const product = products.value.find((p) => p.id === item.id);
+          return total + (product?.price || 0) * item.quantity;
+        }, 0)
+        .toFixed(2);
     });
 
     return {
