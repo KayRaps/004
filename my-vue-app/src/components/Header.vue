@@ -86,19 +86,12 @@
             </li>
 
             <!-- Login/Logout Link -->
-            <li>
-              <a>
-              
-              </a>
-              <li>
-    <a v-if="isLoggedIn" href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700" @click.prevent="logout">
+            <a v-if="isLoggedIn" href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700" @click.prevent="logout">
       Logout
     </a>
     <router-link v-else to="/login" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700">
       Login
     </router-link>
-  </li>
-            </li>
           </ul>
         </div>
       </div>
