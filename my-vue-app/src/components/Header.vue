@@ -85,14 +85,19 @@
               </router-link>
             </li>
 
-            <!-- Login Link -->
+            <!-- Login/Logout Link -->
             <li>
-              <router-link
-                to="/login"
-                class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700"
-              >
-                Login
-              </router-link>
+              <a>
+              
+              </a>
+              <li>
+    <a v-if="isLoggedIn" href="#" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700" @click.prevent="logout">
+      Logout
+    </a>
+    <router-link v-else to="/login" class="block py-2 px-3 text-white rounded hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700">
+      Login
+    </router-link>
+  </li>
             </li>
           </ul>
         </div>
@@ -102,20 +107,31 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 
 export default {
-  name: "Header",
+  name: 'Header',
   setup() {
+    const router = useRouter();
     const showNavbar = ref(false);
+    const isLoggedIn = ref(!!localStorage.getItem('token'));
 
     const toggleNavbar = () => {
       showNavbar.value = !showNavbar.value;
     };
 
+    const logout = () => {
+      localStorage.removeItem('token');
+      isLoggedIn.value = false;
+      router.push('/login');
+    };
+
     return {
       showNavbar,
       toggleNavbar,
+      isLoggedIn,
+      logout,
     };
   },
 };
