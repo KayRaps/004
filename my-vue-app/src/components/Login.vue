@@ -91,7 +91,7 @@
 <script>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import jwt_decode from 'jwt-decode';
+import * as jwtDecode from 'jwt-decode';
 
 export default {
   name: 'Login',
@@ -124,11 +124,13 @@ export default {
         });
 
         if (response.ok) {
-          const { token } = await response.json();
-          localStorage.setItem('token', token);
-          const decodedToken = jwt_decode(token);
-          localStorage.setItem('userId', decodedToken.userId);
-          router.push('/');
+          if (response.ok) {
+        const { token } = await response.json();
+        localStorage.setItem('token', token);
+        const decodedToken = jwtDecode(token);
+        localStorage.setItem('userId', decodedToken.userId);
+        router.push('/');
+          }
         } else {
           error.value = 'Invalid username or password.';
         }
