@@ -40,6 +40,9 @@
             <p>Ratings: {{ product.rating.rate }}</p>
             <p>Reviews: {{ product.rating.count }}</p>
           </router-link>
+          <button class="add-to-cart" @click="addToCart(product)">
+        Add to Cart
+      </button>
         </div>
       </div>
     </div>
@@ -70,6 +73,8 @@ export default {
     const categories = ref([]);
     const selectedCategory = ref(route.query.category || "");
     const sortOrder = ref(route.query.sort || "");
+    const cart = ref([]);
+
 
     const filteredProducts = computed(() => {
       return filterProducts(
@@ -113,6 +118,14 @@ export default {
       }
       router.push({ query: newQuery });
     };
+    const addToCart = (product) => {
+      const existingItem = cart.value.find((item) => item.id === product.id);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.value.push({ ...product, quantity: 1 });
+      }
+    };
 
     onMounted(async () => {
       await fetchCategoriesData();
@@ -141,12 +154,23 @@ export default {
       fetchCategoriesData,
       handleCategoryChange,
       handleSortChange,
+      cart,
+      addToCart,
     };
   },
 };
 </script>
 
 <style>
+.add-to-cart {
+  background-color: blue;
+  color: white;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  margin-top: 1rem;
+}
 .container {
   max-width: 1200px;
 }
